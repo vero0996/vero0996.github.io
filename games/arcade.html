@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>veronaz.exe — tiny arcade</title>
+<style>
+:root {
+  --bg: #211711;
+  --panel: #35251b;
+  --ink: #f0e2ce;
+  --muted: #b39a80;
+  --rust: #c16b43;
+  --line: #4c382b;
+  --serif: Georgia, serif;
+  --mono: "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+}
+main { max-width: 1000px; margin: auto; }
+.kicker {
+  color: var(--rust);
+  font-size: 11px;
+  letter-spacing: .16em;
+}
+h1 {
+  font: clamp(38px, 7vw, 64px)/1 var(--serif);
+  margin: 12px 0;
+}
+p { color: var(--muted); line-height: 1.6; font-size: 13px; }
+.games {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 25px 0 14px;
+}
+.choice {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 15px 6px;
+  min-height: 85px;
+  color: var(--ink);
+  cursor: pointer;
+  font: 12px var(--mono);
+}
+.choice span { display: block; font-size: 25px; margin-bottom: 8px; }
+.choice:hover, .choice.active {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: white;
+}
+iframe {
+  width: 100%;
+  height: 660px;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+.footer {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+@media(max-width:650px) {
+  body { padding: 13px; }
+  .games { grid-template-columns: repeat(3, 1fr); }
+  iframe { height: 760px; }
+}
+@media(max-width:390px) {
+  .games { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">VERONAZ.EXE / SIDE QUEST</div>
+  <h1>tiny arcade<span style="color:var(--rust)">.</span></h1>
+  <p>A tiny corner of the internet for taking a break.<br>
+  Pick a game, stay a little, then get back to building cool things.</p>
+
+  <nav class="games" aria-label="Choose a game">
+    <button class="choice active" data-game="leaves.html">
+      <span>🍂</span>Falling Leaves
+    </button>
+    <button class="choice" data-game="2048.html">
+      <span>🔢</span>2048
+    </button>
+    <button class="choice" data-game="tetris.html">
+      <span>🧱</span>Tetris
+    </button>
+    <button class="choice" data-game="mahjong.html">
+      <span>🀄</span>Mahjong
+    </button>
+    <button class="choice" data-game="solitaire.html">
+      <span>🂡</span>Solitaire
+    </button>
+  </nav>
+
+  <iframe id="game-frame" src="leaves.html"
+    title="Selected arcade game"></iframe>
+
+  <div class="footer">MADE FOR PROCRASTINATION, WITH LOVE ♡</div>
+</main>
+<script>
+const frame = document.getElementById("game-frame");
+const buttons = document.querySelectorAll("[data-game]");
+
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+    buttons.forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    frame.src = button.dataset.game;
+  });
+});
+</script>
+</body>
+</html>

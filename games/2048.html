@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2048 — veronaz arcade</title>
+<style>
+:root {
+  --bg: #211711;
+  --panel: #35251b;
+  --ink: #f0e2ce;
+  --muted: #b39a80;
+  --rust: #c16b43;
+  --line: #4c382b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 22px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Courier New", monospace;
+}
+main { max-width: 510px; margin: auto; }
+.kicker { color: var(--rust); font-size: 11px; letter-spacing: .15em; }
+header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+h1 { font: 48px Georgia, serif; margin: 9px 0; }
+.scores { display: flex; gap: 6px; }
+.score {
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-align: center;
+}
+.score span { display: block; font-size: 9px; color: var(--muted); }
+.score b { font-size: 17px; }
+p { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.actions { display: flex; gap: 8px; margin: 16px 0; }
+button {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: 12px "Courier New", monospace;
+  cursor: pointer;
+}
+button.primary { background: var(--rust); border-color: var(--rust); color: white; }
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 9px;
+  border-radius: 12px;
+  background: #493426;
+  touch-action: none;
+  outline: none;
+}
+.tile {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #35251b;
+  color: #b39a80;
+  font: bold clamp(18px, 5vw, 30px) "Courier New", monospace;
+}
+.v2 { background: #e7d7b8; color: #493426; }
+.v4 { background: #d8bd8b; color: #493426; }
+.v8 { background: #c98758; color: white; }
+.v16 { background: #bd6d43; color: white; }
+.v32 { background: #a95435; color: white; }
+.v64 { background: #8e412c; color: white; }
+.v128, .v256, .v512, .v1024, .v2048 {
+  background: #d4a44e;
+  color: #2b1c14;
+  font-size: clamp(13px, 4vw, 22px);
+}
+#message { min-height: 30px; color: #d4a44e; }
+@media(max-width:400px) {
+  body { padding: 12px; }
+  .board { gap: 5px; padding: 6px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">02 / NUMBER BRAIN</div>
+  <header>
+    <h1>2048<span style="color:var(--rust)">.</span></h1>
+    <div class="scores">
+      <div class="score"><span>SCORE</span><b id="score">0</b></div>
+      <div class="score"><span>BEST</span><b id="best">0</b></div>
+    </div>
+  </header>
+  <p>Combine matching numbers to reach 2048. Use your arrow keys or swipe across the board.</p>
+  <div class="actions">
+    <button class="primary" id="new">New game ↻</button>
+    <button id="undo">Undo move</button>
+  </div>
+  <div class="board" id="board" tabindex="0" aria-label="2048 game board"></div>
+  <p>↑ ↓ ← → &nbsp; / &nbsp; swipe to move</p>
+  <div id="message" aria-live="polite"></div>
+</main>
+<script>
+const SIZE = 4;
+const boardEl = document.getElementById("board");
+const scoreEl = document.getElementById("score");
+const bestEl = document.getElementById("best");
+const messageEl = document.getElementById("message");
+
+let grid, score, best = Number(localStorage.getItem("veronaz-2048-best") || 0);
+let previous = null, won = false, over = false;
+
+bestEl.textContent = best;
+
+function emptyGrid() {
+  return Array.from({length: SIZE}, () => Array(SIZE).fill(0));
+}
+
+function addTile() {
+  const empty = [];
+  grid.forEach((row, y) => row.forEach((v, x) => {
+    if (!v) empty.push([y, x]);
+  }));
+  if (!empty.length) return;
+  const [y, x] = empty[Math.floor(Math.random() * empty.length)];
+  grid[y][x] = Math.random() < 0.9 ? 2 : 4;
+}
+
+function draw() {
+  boardEl.innerHTML = "";
+  grid.flat().forEach(value => {
+    const tile = document.createElement("div");
+    tile.className = "tile" + (value ? " v" + value : "");
+    tile.textContent = value || "";
+    boardEl.appendChild(tile);
+  });
+  scoreEl.textContent = score;
+  bestEl.textContent = best;
+}
+
+function start() {
+  grid = emptyGrid();
+  score = 0;
+  won = false;
+  over = false;
+  previous = null;
+  messageEl.textContent = "";
+  addTile();
+  addTile();
+  draw();
+}
+
+function slide(line) {
+  let values = line.filter(Boolean);
+  let gain = 0;
+
+  for (let i = 0; i < values.length - 1; i++) {
+    if (values[i] === values[i + 1]) {
+      values[i] *= 2;
+      gain += values[i];
+      values.splice(i + 1, 1);
+    }
+  }
+
+  while (values.length < SIZE) values.push(0);
+  return [values, gain];
+}
+
+function canMove() {
+  if (grid.flat().includes(0)) return true;
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      if (x < SIZE - 1 && grid[y][x] === grid[y][x + 1]) return true;
+      if (y < SIZE - 1 && grid[y][x] === grid[y + 1][x]) return true;
+    }
+  }
+  return false;
+}
+
+function move(direction) {
+  if (over) return;
+
+  const old = grid.map(row => row.slice());
+  const next = emptyGrid();
+  let gain = 0;
+
+  for (let i = 0; i < SIZE; i++) {
+    let line = [];
+
+    for (let j = 0; j < SIZE; j++) {
+      if (direction === "left") line.push(grid[i][j]);
+      if (direction === "right") line.push(grid[i][SIZE - 1 - j]);
+      if (direction === "up") line.push(grid[j][i]);
+      if (direction === "down") line.push(grid[SIZE - 1 - j][i]);
+    }
+
+    let result = slide(line);
+    let values = result[0];
+    gain += result[1];
+
+    for (let j = 0; j < SIZE; j++) {
+      if (direction === "left") next[i][j] = values[j];
+      if (direction === "right") next[i][SIZE - 1 - j] = values[j];
+      if (direction === "up") next[j][i] = values[j];
+      if (direction === "down") next[SIZE - 1 - j][i] = values[j];
+    }
+  }
+
+  if (JSON.stringify(old) === JSON.stringify(next)) return;
+
+  previous = {grid: old, score};
+  grid = next;
+  score += gain;
+  if (score > best) {
+    best = score;
+    localStorage.setItem("veronaz-2048-best", best);
+  }
+
+  addTile();
+
+  if (!won && grid.flat().includes(2048)) {
+    won = true;
+    messageEl.textContent = "You made 2048! Keep going or start a new game.";
+  }
+
+  if (!canMove()) {
+    over = true;
+    messageEl.textContent = "No moves left — start a new game to try again.";
+  }
+
+  draw();
+}
+
+document.addEventListener("keydown", event => {
+  const keys = {
+    ArrowLeft: "left",
+    ArrowRight: "right",
+    ArrowUp: "up",
+    ArrowDown: "down"
+  };
+  if (keys[event.key]) {
+    event.preventDefault();
+    move(keys[event.key]);
+  }
+});
+
+document.getElementById("new").addEventListener("click", start);
+
+document.getElementById("undo").addEventListener("click", () => {
+  if (!previous) return;
+  grid = previous.grid;
+  score = previous.score;
+  previous = null;
+  over = false;
+  messageEl.textContent = "";
+  draw();
+});
+
+let startX = 0, startY = 0;
+boardEl.addEventListener("touchstart", event => {
+  startX = event.changedTouches[0].clientX;
+  startY = event.changedTouches[0].clientY;
+}, {passive: true});
+
+boardEl.addEventListener("touchend", event => {
+  const dx = event.changedTouches[0].clientX - startX;
+  const dy = event.changedTouches[0].clientY - startY;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 25) return;
+
+  move(Math.abs(dx) > Math.abs(dy)
+    ? (dx > 0 ? "right" : "left")
+    : (dy > 0 ? "down" : "up"));
+}, {passive: true});
+
+start();
+</script>
+</body>
+</html>
