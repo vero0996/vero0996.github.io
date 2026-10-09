@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>veronaz.exe — tiny arcade</title>
+
 <style>
 :root {
   --bg: #211711;
@@ -16,7 +17,9 @@
   --serif: Georgia, serif;
   --mono: "Courier New", monospace;
 }
+
 * { box-sizing: border-box; }
+
 body {
   margin: 0;
   padding: 24px;
@@ -24,23 +27,36 @@ body {
   color: var(--ink);
   font-family: var(--mono);
 }
-main { max-width: 1000px; margin: auto; }
+
+main {
+  max-width: 1000px;
+  margin: auto;
+}
+
 .kicker {
   color: var(--rust);
   font-size: 11px;
   letter-spacing: .16em;
 }
+
 h1 {
   font: clamp(38px, 7vw, 64px)/1 var(--serif);
   margin: 12px 0;
 }
-p { color: var(--muted); line-height: 1.6; font-size: 13px; }
+
+p {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 13px;
+}
+
 .games {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin: 25px 0 14px;
 }
+
 .choice {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -50,77 +66,158 @@ p { color: var(--muted); line-height: 1.6; font-size: 13px; }
   color: var(--ink);
   cursor: pointer;
   font: 12px var(--mono);
+  transition: background .2s, transform .2s;
 }
-.choice span { display: block; font-size: 25px; margin-bottom: 8px; }
-.choice:hover, .choice.active {
+
+.choice span {
+  display: block;
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.choice:hover {
+  transform: translateY(-2px);
+}
+
+.choice:hover,
+.choice.active {
   background: var(--rust);
   border-color: var(--rust);
   color: white;
 }
-iframe {
+
+.game-label {
+  color: var(--rust);
+  font-size: 11px;
+  letter-spacing: .12em;
+  margin: 12px 0;
+}
+
+.game-container {
+  position: relative;
   width: 100%;
-  height: 660px;
-  display: block;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--bg);
 }
+
+iframe {
+  width: 100%;
+  height: 660px;
+  display: block;
+  border: 0;
+  background: var(--bg);
+}
+
 .footer {
   font-size: 10px;
   color: var(--muted);
   margin-top: 12px;
 }
+
 @media(max-width:650px) {
   body { padding: 13px; }
-  .games { grid-template-columns: repeat(3, 1fr); }
+
+  .games {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   iframe { height: 760px; }
 }
+
 @media(max-width:390px) {
-  .games { grid-template-columns: repeat(2, 1fr); }
+  .games { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
 </head>
+
 <body>
 <main>
   <div class="kicker">VERONAZ.EXE / SIDE QUEST</div>
+
   <h1>tiny arcade<span style="color:var(--rust)">.</span></h1>
-  <p>A tiny corner of the internet for taking a break.<br>
-  Pick a game, stay a little, then get back to building cool things.</p>
+
+  <p>
+    A tiny corner of the internet for taking a break.<br>
+    Pick a game, stay a little, then get back to building cool things.
+  </p>
 
   <nav class="games" aria-label="Choose a game">
-    <button class="choice active" data-game="leaves.html">
+    <button class="choice active" type="button" data-game="leaves.html">
       <span>🍂</span>Falling Leaves
     </button>
-    <button class="choice" data-game="2048.html">
+
+    <button class="choice" type="button" data-game="2048.html">
       <span>🔢</span>2048
     </button>
-    <button class="choice" data-game="tetris.html">
+
+    <button class="choice" type="button" data-game="tetris.html">
       <span>🧱</span>Tetris
     </button>
-    <button class="choice" data-game="mahjong.html">
+
+    <button class="choice" type="button" data-game="mahjong.html">
       <span>🀄</span>Mahjong
     </button>
-    <button class="choice" data-game="solitaire.html">
+
+    <button class="choice" type="button" data-game="solitaire.html">
       <span>🂡</span>Solitaire
     </button>
   </nav>
 
-  <iframe id="game-frame" src="leaves.html"
-    title="Selected arcade game"></iframe>
+  <div class="game-label" id="game-label" aria-live="polite">
+    NOW PLAYING / FALLING LEAVES
+  </div>
 
-  <div class="footer">MADE FOR PROCRASTINATION, WITH LOVE ♡</div>
+  <div class="game-container">
+    <iframe
+      id="game-frame"
+      src="./leaves.html"
+      title="Selected arcade game"
+      loading="eager">
+    </iframe>
+  </div>
+
+  <div class="footer">
+    MADE FOR PROCRASTINATION, WITH LOVE ♡
+  </div>
 </main>
-<script>
-const frame = document.getElementById("game-frame");
-const buttons = document.querySelectorAll("[data-game]");
 
-buttons.forEach(button => {
-  button.addEventListener("click", () => {
-    buttons.forEach(item => item.classList.remove("active"));
-    button.classList.add("active");
-    frame.src = button.dataset.game;
+<script>
+(() => {
+  const frame = document.getElementById("game-frame");
+  const buttons = document.querySelectorAll(".choice");
+  const label = document.getElementById("game-label");
+
+  const gameNames = {
+    "leaves.html": "FALLING LEAVES",
+    "2048.html": "2048",
+    "tetris.html": "TETRIS",
+    "mahjong.html": "MAHJONG",
+    "solitaire.html": "SOLITAIRE"
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const game = button.dataset.game;
+
+      if (!game || !gameNames[game]) return;
+
+      // Update the selected button.
+      buttons.forEach((item) => {
+        item.classList.toggle("active", item === button);
+      });
+
+      // Update the game label.
+      label.textContent = "NOW PLAYING / " + gameNames[game];
+
+      // Load the selected file from the same folder.
+      const target = new URL("./" + game, window.location.href);
+      frame.src = target.href;
+    });
   });
-});
+})();
 </script>
+
 </body>
 </html>
