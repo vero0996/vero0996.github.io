@@ -3,20 +3,29 @@
    VERONAZ.EXE — A LITTLE CORNER OF THE INTERNET
    ========================================= */
 
+
 :root {
-  --paper: #f5f0e8;
-  --paper-light: #fcf9f3;
-  --ink: #302c28;
-  --muted: #827a70;
-  --rust: #a65e43;
-  --rust-dark: #81442f;
-  --sage: #79866d;
-  --sage-light: #e3e7dc;
-  --blush: #ead7ce;
-  --line: #dcd3c6;
+  /* VERONAZ.EXE — dark cozy autumn */
+
+  --paper: #211711;
+  --paper-light: #35251b;
+
+  --ink: #f0e2ce;
+  --muted: #b39a80;
+
+  --rust: #c16b43;
+  --rust-dark: #95472b;
+
+  --sage: #a3a786;
+  --sage-light: #d8d3bb;
+
+  --blush: #6e4140;
+  --line: #4c382b;
+
   --mono: "DM Mono", monospace;
   --sans: "DM Sans", sans-serif;
   --serif: "Playfair Display", Georgia, serif;
+
   --page-width: 1120px;
 }
 
@@ -1246,5 +1255,272 @@ button:hover .icon-outline {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================
+   DARK COZY OVERRIDES
+   Add at the end of styles.css
+   ========================================= */
+
+/* Background texture */
+body::before {
+  z-index: 0;
+  opacity: 0.10;
+  mix-blend-mode: screen;
+}
+
+body {
+  background:
+    radial-gradient(
+      ellipse at 15% 5%,
+      rgba(130, 73, 43, 0.13),
+      transparent 38%
+    ),
+    var(--paper);
+}
+
+/* Keep content above the texture */
+.site-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* Header and navigation */
+.site-header {
+  border-color: var(--line);
+}
+
+.brand-mark {
+  color: var(--rust);
+}
+
+.main-nav a:hover,
+.header-link:hover,
+.text-link:hover {
+  color: #e6a477;
+}
+
+/* Hero */
+.hero-muted {
+  color: #927c68;
+}
+
+.hero-description,
+.about-content p,
+.little-copy p,
+.game-intro p,
+.project-main > p {
+  color: #c1ad98;
+}
+
+.hero-serif,
+.serif-italic {
+  color: #d18a60;
+}
+
+.status-dot {
+  background: #a3a786;
+  box-shadow: 0 0 0 3px rgba(163, 167, 134, 0.15);
+}
+
+/* Main call to action */
+.button-primary {
+  color: #211711;
+  background: #e0bd91;
+}
+
+.button-primary:hover {
+  color: #fff1df;
+  background: var(--rust-dark);
+}
+
+/* Scrapbook note */
+.scribble-card {
+  background: #e8d4b7;
+  border-color: #b99b77;
+  color: #302016;
+  box-shadow: 7px 8px 0 rgba(0, 0, 0, 0.18);
+}
+
+.scribble-card .card-index {
+  color: #796047;
+}
+
+.scribble-text em,
+.scribble-signature {
+  color: #98472d;
+}
+
+/* Sections and dividers */
+.section,
+.section-heading,
+.hero-bottom,
+.site-footer {
+  border-color: var(--line);
+}
+
+.section-icon {
+  color: var(--rust);
+}
+
+/* About tags and project tags */
+.about-tags span,
+.project-tags span {
+  color: #d2bda5;
+  border-color: var(--line);
+  background: rgba(255, 241, 220, 0.025);
+}
+
+/* Paper notes: actual paper against a dark background */
+.note-cream {
+  background: #e5d1b2;
+}
+
+.note-sage {
+  background: #c9c9ad;
+}
+
+.note-blush {
+  background: #dfbdb0;
+}
+
+.paper-note {
+  border-color: rgba(20, 12, 7, 0.16);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.paper-note h3 {
+  color: #302016;
+}
+
+.paper-note p {
+  color: #67503d;
+}
+
+.paper-note .note-label {
+  color: #7d6149;
+}
+
+/* Project list */
+.project-status {
+  color: #d2bda5;
+  border-color: var(--line);
+}
+
+.project-arrow {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.project-arrow:hover {
+  color: #fff1df;
+  background: var(--rust-dark);
+}
+
+/* Random thought */
+.thought-card {
+  background: #302117;
+  border-color: var(--line);
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.15);
+}
+
+.thought-card > p {
+  color: #f0e2ce;
+}
+
+.thought-quote,
+.text-button {
+  color: #d18a60;
+}
+
+/* Falling-leaves game */
+.game-panel {
+  background: rgba(53, 37, 27, 0.78);
+  border-color: var(--line);
+}
+
+.game-board {
+  border-color: #765640;
+  background:
+    radial-gradient(
+      ellipse at 20% 20%,
+      rgba(160, 92, 55, 0.19),
+      transparent 52%
+    ),
+    #261a13;
+}
+
+.game-leaf-icon {
+  color: #c4ad7b;
+}
+
+.game-welcome p {
+  color: #f0e2ce;
+}
+
+.leaf svg,
+.falling-leaf svg {
+  color: #d18a60;
+}
+
+.game-status {
+  color: #b39a80;
+}
+
+/* Secret corner */
+.secret-section {
+  background:
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(166, 94, 67, 0.14),
+      transparent 60%
+    ),
+    #302117;
+  border-color: var(--line);
+}
+
+.secret-inner p {
+  color: #c1ad98;
+}
+
+.secret-button {
+  color: var(--ink);
+  border-color: #70513b;
+  background: rgba(255, 241, 220, 0.035);
+}
+
+.secret-button:hover {
+  background: rgba(255, 241, 220, 0.09);
+}
+
+.secret-message {
+  border-color: var(--line);
+  color: #f0e2ce;
+}
+
+/* Footer */
+.site-footer > p,
+.footer-year,
+.back-to-top {
+  color: var(--muted);
+}
+
+/* Selection and keyboard focus */
+::selection {
+  background: #c16b43;
+  color: #fff5e9;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline-color: #d18a60;
+}
+
+/* Keep the experience comfortable on mobile */
+@media (max-width: 650px) {
+  .main-nav {
+    border-color: var(--line);
   }
 }
