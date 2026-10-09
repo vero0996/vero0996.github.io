@@ -1,428 +1,393 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f6f0e6" />
-  <meta name="description" content="A little corner of the internet by Veronaz — code, robots, experiments, and curious things." />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>veronaz.exe — a work in progress</title>
+  <meta name="description" content="A little corner of the internet by Vero. Software, robotics, experiments, and everything in between.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#f5f0e8">
 
-  <link rel="stylesheet" href="style.css" />
-  <script src="game.js" defer></script>
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+  <!-- Outline icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="falling-decor" aria-hidden="true">✳ ✦ 🍂 ✿</div>
+  <div class="site-wrapper">
 
-  <header class="topbar">
-    <a class="brand" href="#home" aria-label="Veronaz home">
-      veronaz<span>✳</span>
-    </a>
+    <!-- Navigation -->
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Veronaz home">
+        <span class="brand-mark">vz.</span>
+        <span class="brand-label">PERSONAL INTERNET CORNER</span>
+      </a>
 
-    <nav aria-label="Main navigation">
-      <a href="#about">the human</a>
-      <a href="#projects">the things</a>
-      <a href="#play">the arcade</a>
-      <a href="#secrets">secrets</a>
-    </nav>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#about">about</a>
+        <a href="#projects">projects</a>
+        <a href="#little-things">little things</a>
+        <a href="#play">play</a>
+      </nav>
 
-    <span class="status-pill">
-      <span class="status-dot"></span> online-ish
-    </span>
-  </header>
+      <a class="header-link" href="mailto:hello@veronaz.com">
+        say hello
+        <i data-lucide="arrow-up-right" class="icon-outline" aria-hidden="true"></i>
+      </a>
+    </header>
 
-  <main id="home">
+    <main>
+      <!-- Hero -->
+      <section class="hero" id="home">
+        <div class="hero-topline">
+          <span><span class="status-dot"></span> CURRENTLY FIGURING IT OUT</span>
+          <span class="hero-location">MONTERREY, MX · INTERNET TIME</span>
+        </div>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-topline">
-        <span class="mono-label">PERSONAL INTERNET CORNER / 001</span>
-        <span class="mono-label">EST. CURIOSITY</span>
-      </div>
+        <div class="hero-content">
+          <div class="hero-copy">
+            <p class="eyebrow">HELLO, WORLD. AGAIN.</p>
 
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">✳ hi, internet stranger</p>
+            <h1>
+              I'm Vero.<br>
+              <span class="hero-serif">veronaz,</span>
+              <span class="hero-muted">in progress.</span>
+            </h1>
 
-          <h1>
-            I'm Vero<span class="rust">.</span><br />
-            <span class="serif-italic">veronaz,</span><br />
-            in progress<span class="rust">.</span>
-          </h1>
+            <p class="hero-description">
+              Computer engineering student, robotics enthusiast, professional
+              overthinker. I like building things, figuring out how they work,
+              and occasionally making a mess along the way.
+            </p>
 
-          <p class="hero-subtitle">
-            I write code, build robots, collect ideas, break things
-            (occasionally on purpose), and learn my way through it all.
-          </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#projects">
+                Explore my stuff
+                <i data-lucide="arrow-down-right" class="icon-outline" aria-hidden="true"></i>
+              </a>
 
-          <div class="hero-tags">
-            <span>⌘ software</span>
-            <span>↗ robotics</span>
-            <span>✳ experiments</span>
+              <a class="text-link" href="#about">
+                A little about me
+                <i data-lucide="move-up-right" class="icon-outline" aria-hidden="true"></i>
+              </a>
+            </div>
+
+            <div class="hero-footnote">
+              <i data-lucide="coffee" class="icon-outline" aria-hidden="true"></i>
+              <span>Built with curiosity and probably too many tabs open.</span>
+            </div>
           </div>
 
-          <div class="hero-actions">
-            <a class="button" href="#projects">
-              wander around <span aria-hidden="true">↘</span>
-            </a>
+          <aside class="hero-side" aria-label="A little note">
+            <div class="scribble-card">
+              <span class="card-index">NOTE NO. 001</span>
+              <i data-lucide="asterisk" class="note-star icon-outline" aria-hidden="true"></i>
+              <p class="scribble-text">
+                currently in my<br>
+                <em>let's see what happens</em><br>
+                era.
+              </p>
+              <span class="scribble-signature">— vero</span>
+            </div>
 
-            <a class="text-link"
-               href="https://github.com/vero0996"
-               target="_blank"
-               rel="noopener noreferrer">
-              GitHub, if you must ↗
-            </a>
+            <div class="side-caption">
+              <i data-lucide="paperclip" class="icon-outline" aria-hidden="true"></i>
+              <span>A work in progress, always.</span>
+            </div>
+          </aside>
+        </div>
+
+        <div class="hero-bottom">
+          <span>SCROLL AROUND, STAY A WHILE</span>
+          <a href="#about" aria-label="Scroll to about">
+            <i data-lucide="arrow-down" class="icon-outline" aria-hidden="true"></i>
+          </a>
+          <span>MADE BY ME, FOR THE INTERNET</span>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="section about-section" id="about">
+        <div class="section-heading">
+          <span class="section-kicker">01 / THE HUMAN BEHIND THE SCREEN</span>
+          <i data-lucide="scan-face" class="section-icon icon-outline" aria-hidden="true"></i>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-title">
+            <h2>A brain full of tabs.<br><span class="serif-italic">A heart for making.</span></h2>
+          </div>
+
+          <div class="about-content">
+            <p>
+              I'm a computer engineering student who loves the space where
+              software meets the physical world. One day I'm debugging a robot;
+              the next, I'm automating something that absolutely did not need
+              to be automated.
+            </p>
+            <p>
+              I enjoy learning by doing, asking too many questions, and turning
+              complicated ideas into things that actually work. I'm still
+              figuring things out, and honestly, that's half the fun.
+            </p>
+
+            <div class="about-tags">
+              <span><i data-lucide="cpu" aria-hidden="true"></i> embedded systems</span>
+              <span><i data-lucide="waves" aria-hidden="true"></i> robotics</span>
+              <span><i data-lucide="code-2" aria-hidden="true"></i> software</span>
+              <span><i data-lucide="lightbulb" aria-hidden="true"></i> curious by default</span>
+            </div>
           </div>
         </div>
 
-        <div class="hero-art">
-          <div class="orbit orbit-one" aria-hidden="true"></div>
-          <div class="orbit orbit-two" aria-hidden="true"></div>
+        <div class="paper-notes">
+          <article class="paper-note note-cream">
+            <i data-lucide="telescope" class="icon-outline" aria-hidden="true"></i>
+            <span class="note-label">WHAT I LIKE</span>
+            <h3>Understanding<br>how things work.</h3>
+            <p>Taking things apart, connecting the dots, making them better.</p>
+          </article>
 
-          <div class="floating-note">
-            <span class="note-label">CURRENTLY</span>
-            <strong>figuring it out</strong>
-            <span class="note-scribble">one tab at a time ↗</span>
-          </div>
+          <article class="paper-note note-sage">
+            <i data-lucide="wrench" class="icon-outline" aria-hidden="true"></i>
+            <span class="note-label">WHAT I DO</span>
+            <h3>Build, break,<br>learn, repeat.</h3>
+            <p>Code, test, debug. Sometimes in that order.</p>
+          </article>
 
-          <div class="sun-sticker" aria-hidden="true">✳</div>
+          <article class="paper-note note-blush">
+            <i data-lucide="sprout" class="icon-outline" aria-hidden="true"></i>
+            <span class="note-label">WHAT I'M LEARNING</span>
+            <h3>There's always<br>another layer.</h3>
+            <p>Growing into the engineer and person I want to become.</p>
+          </article>
+        </div>
+      </section>
 
-          <div class="hero-cat-card">
-            <span class="tiny-label">MEET THE INTERN</span>
+      <!-- Projects -->
+      <section class="section projects-section" id="projects">
+        <div class="section-heading">
+          <span class="section-kicker">02 / THINGS I'VE BEEN MAKING</span>
+          <i data-lucide="folder-open" class="section-icon icon-outline" aria-hidden="true"></i>
+        </div>
 
-            <div class="hero-cat">
-              <div
-                class="cat-face"
-                id="cat"
-                role="button"
-                tabindex="0"
-                aria-label="Pet Commit the cat"
-              >
-                <span class="ear ear-left"></span>
-                <span class="ear ear-right"></span>
-                <span class="eye eye-left"></span>
-                <span class="eye eye-right"></span>
-                <span class="blush blush-left"></span>
-                <span class="blush blush-right"></span>
-                <span class="nose"></span>
-                <span class="mouth"></span>
+        <div class="projects-intro">
+          <h2>Some things I've<br><span class="serif-italic">put into the world.</span></h2>
+          <p>A collection of experiments, team projects, and ideas that escaped my notes app.</p>
+        </div>
+
+        <div class="project-list">
+          <article class="project-card">
+            <div class="project-number">01</div>
+            <div class="project-main">
+              <div class="project-meta">
+                <span>ROBOTICS / SOFTWARE</span>
+                <span class="project-status"><span class="status-dot"></span> IN PROGRESS</span>
               </div>
-
-              <div class="cat-caption">
-                <strong>Commit</strong>
-                <span>chief nap officer</span>
+              <h3>Autonomous Underwater Vehicle</h3>
+              <p>
+                Working on software for an underwater robot: control systems,
+                simulation, state estimation, and the small details that make
+                a vehicle behave a little more like we want it to.
+              </p>
+              <div class="project-tags">
+                <span>ROS 2</span><span>C++</span><span>MATLAB</span><span>Simulation</span>
               </div>
             </div>
+            <a class="project-arrow" href="https://github.com/vero0996" target="_blank" rel="noreferrer" aria-label="View robotics projects on GitHub">
+              <i data-lucide="arrow-up-right" class="icon-outline" aria-hidden="true"></i>
+            </a>
+          </article>
 
-            <p id="cat-message" class="cat-message" aria-live="polite">
-              tap my head for a code review 🐾
+          <article class="project-card">
+            <div class="project-number">02</div>
+            <div class="project-main">
+              <div class="project-meta">
+                <span>IoT / FULL STACK</span>
+                <span class="project-status">PROJECT</span>
+              </div>
+              <h3>Smart Parking Lot</h3>
+              <p>
+                An IoT parking prototype using distance sensors and a
+                microcontroller, connected to a backend for collecting and
+                managing parking space data.
+              </p>
+              <div class="project-tags">
+                <span>ESP8266</span><span>Node.js</span><span>PostgreSQL</span><span>REST API</span>
+              </div>
+            </div>
+            <a class="project-arrow" href="https://github.com/vero0996" target="_blank" rel="noreferrer" aria-label="View code on GitHub">
+              <i data-lucide="arrow-up-right" class="icon-outline" aria-hidden="true"></i>
+            </a>
+          </article>
+
+          <article class="project-card">
+            <div class="project-number">03</div>
+            <div class="project-main">
+              <div class="project-meta">
+                <span>ANDROID / COMMUNITY</span>
+                <span class="project-status">PROJECT</span>
+              </div>
+              <h3>Familias que Suman+</h3>
+              <p>
+                An Android app concept connecting families with community
+                activities, donation opportunities, and ways to get involved
+                in their local communities.
+              </p>
+              <div class="project-tags">
+                <span>Kotlin</span><span>Android</span><span>Jetpack Compose</span>
+              </div>
+            </div>
+            <a class="project-arrow" href="https://github.com/vero0996/familias_que_suman_E4" target="_blank" rel="noreferrer" aria-label="View Familias que Suman on GitHub">
+              <i data-lucide="arrow-up-right" class="icon-outline" aria-hidden="true"></i>
+            </a>
+          </article>
+        </div>
+
+        <div class="projects-footer">
+          <span>MORE EXPERIMENTS LIVE IN MY GITHUB</span>
+          <a href="https://github.com/vero0996" target="_blank" rel="noreferrer">
+            Open GitHub
+            <i data-lucide="external-link" class="icon-outline" aria-hidden="true"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- Little things / random thoughts -->
+      <section class="section little-section" id="little-things">
+        <div class="section-heading">
+          <span class="section-kicker">03 / THE MISCELLANEOUS DRAWER</span>
+          <i data-lucide="notebook-pen" class="section-icon icon-outline" aria-hidden="true"></i>
+        </div>
+
+        <div class="little-grid">
+          <div class="little-copy">
+            <h2>Not everything<br>needs to be <span class="serif-italic">a project.</span></h2>
+            <p>
+              Some thoughts are just thoughts. Some ideas are half-baked.
+              Some tabs have been open for three weeks.
             </p>
           </div>
 
-          <div class="scribble-sticker" aria-hidden="true">
-            made of<br />curiosity ♡
-          </div>
-
-          <div class="sticker-star" aria-hidden="true">✷</div>
-        </div>
-      </div>
-
-      <div class="hero-bottomline">
-        <span>SCROLL TO EXPLORE</span>
-        <span class="scroll-line"></span>
-        <span>NO PARTICULAR ORDER ↓</span>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="about-section section-block">
-      <div class="section-heading">
-        <p class="eyebrow">01 / the human behind the tabs</p>
-        <h2>
-          A brain with <span class="serif-italic">too many</span><br />
-          interesting tabs open.
-        </h2>
-      </div>
-
-      <div class="about-grid">
-        <article class="paper note note-pink">
-          <span class="card-index">A / ABOUT ME</span>
-          <span class="sticker sticker-heart" aria-hidden="true">♡</span>
-
-          <h3>Curious by nature.</h3>
-
-          <p>
-            I'm a computer engineering student who likes turning questions
-            into things that actually work — from software and robotics
-            to tiny experiments that teach me something new.
-          </p>
-
-          <p class="handwriting">
-            always learning, always becoming ✿
-          </p>
-        </article>
-
-        <article class="paper note note-green">
-          <span class="card-index">B / CURRENTLY BREWING</span>
-          <span class="sticker sticker-flower" aria-hidden="true">✿</span>
-
-          <h3>Things on my desk</h3>
-
-          <ul class="cozy-list">
-            <li><span>01</span> Underwater robotics &amp; control</li>
-            <li><span>02</span> Code, simulation &amp; tiny experiments</li>
-            <li><span>03</span> New things to investigate</li>
-            <li><span>04</span> A suspicious amount of coffee</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects" class="projects-section section-block">
-      <div class="section-heading section-heading-row">
-        <div>
-          <p class="eyebrow">02 / little things I've built</p>
-          <h2>Ideas, meet <span class="serif-italic">reality.</span></h2>
-        </div>
-
-        <span class="side-note">
-          a small selection<br />
-          of things in motion ↙
-        </span>
-      </div>
-
-      <div class="project-list">
-        <a
-          href="https://github.com/vero0996"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="project-card"
-        >
-          <span class="project-number">01</span>
-          <span class="project-emoji" aria-hidden="true">🦾</span>
-
-          <span class="project-info">
-            <span class="project-type">ROBOTICS / SIMULATION</span>
-            <strong>Underwater robotics lab</strong>
-            <small>Control, vehicle dynamics, simulation &amp; exploration.</small>
-          </span>
-
-          <span class="project-arrow" aria-hidden="true">↗</span>
-        </a>
-
-        <a
-          href="https://github.com/vero0996"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="project-card"
-        >
-          <span class="project-number">02</span>
-          <span class="project-emoji" aria-hidden="true">🌱</span>
-
-          <span class="project-info">
-            <span class="project-type">SOFTWARE / IOT</span>
-            <strong>Little experiments</strong>
-            <small>Software, connected things &amp; learning by doing.</small>
-          </span>
-
-          <span class="project-arrow" aria-hidden="true">↗</span>
-        </a>
-
-        <a
-          href="https://github.com/vero0996"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="project-card"
-        >
-          <span class="project-number">03</span>
-          <span class="project-emoji" aria-hidden="true">🗂️</span>
-
-          <span class="project-info">
-            <span class="project-type">NOTES FROM THE PROCESS</span>
-            <strong>Things I'm figuring out</strong>
-            <small>Ideas, experiments, and the occasional bug-shaped lesson.</small>
-          </span>
-
-          <span class="project-arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
-
-      <p class="project-footnote">
-        ✳ These are starting points. I'll add the actual project links as
-        this little collection grows.
-      </p>
-    </section>
-
-    <!-- DESK NOTES -->
-    <section class="desk-section section-block">
-      <div class="desk-heading">
-        <p class="eyebrow">03 / open tabs in my brain</p>
-        <h2>Currently <span class="serif-italic">loading...</span></h2>
-        <p>Somewhere between “what if?” and “it works!”</p>
-      </div>
-
-      <div class="desk-board">
-        <article class="desk-item desk-item-yellow">
-          <span class="desk-pin" aria-hidden="true"></span>
-          <span class="mono-label">REMINDER #014</span>
-
-          <p>
-            Make it work.<br />
-            Make it make sense.<br />
-            <em>Make it a little weird.</em>
-          </p>
-        </article>
-
-        <article class="desk-item desk-item-white">
-          <span class="desk-pin" aria-hidden="true"></span>
-          <span class="mono-label">A NOTE TO SELF</span>
-
-          <p>
-            Progress isn't always a straight line. Sometimes it's a very
-            confusing Git branch.
-          </p>
-
-          <span class="note-signoff">— future me, probably</span>
-        </article>
-
-        <button
-          id="random-note"
-          class="desk-item desk-item-sage random-note"
-          type="button"
-          aria-label="Show another random thought"
-        >
-          <span class="desk-pin" aria-hidden="true"></span>
-          <span class="mono-label">PULL A RANDOM THOUGHT ↻</span>
-
-          <p id="random-note-text">
-            Curiosity is a perfectly good starting point.
-          </p>
-
-          <span class="note-signoff">click to shuffle</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- GAME -->
-    <section id="play" class="game-section section-block">
-      <div class="game-intro">
-        <p class="eyebrow">04 / procrastination, but make it productive</p>
-        <h2>Take a tiny <span class="serif-italic">brain break.</span></h2>
-
-        <p>
-          Catch the falling leaves before your brain opens another tab.
-          You have 20 seconds. 🍂
-        </p>
-      </div>
-
-      <div class="game-shell">
-        <div class="game-topbar">
-          <span><span class="status-dot"></span> AUTUMN ARCADE</span>
-          <span class="mono-label">GAME 001 / 20 SEC</span>
-        </div>
-
-        <div class="game-stats">
-          <div>
-            <span>🍁 leaves</span>
-            <strong id="score">0</strong>
-          </div>
-
-          <div>
-            <span>⏱ time</span>
-            <strong><span id="time">20</span><small>s</small></strong>
-          </div>
-
-          <div>
-            <span>🏆 best</span>
-            <strong id="best">0</strong>
-          </div>
-        </div>
-
-        <div
-          id="game-board"
-          class="game-board"
-          aria-label="Catch the falling leaves game"
-        >
-          <div class="game-welcome" id="game-welcome">
-            <span class="welcome-leaf" aria-hidden="true">🍂</span>
-
-            <p>Ready for a little leaf hunt?</p>
-
-            <button id="start-game" class="button" type="button">
-              start playing <span aria-hidden="true">→</span>
+          <div class="thought-card">
+            <span class="note-label">A RANDOM THOUGHT FROM VERO'S BRAIN</span>
+            <i data-lucide="quote" class="thought-quote icon-outline" aria-hidden="true"></i>
+            <p id="random-note-text">Maybe the real debugging was the errors we made along the way.</p>
+            <button class="text-button" id="random-note" type="button">
+              Give me another thought
+              <i data-lucide="refresh-cw" class="icon-outline" aria-hidden="true"></i>
             </button>
           </div>
+        </div>
+      </section>
 
-          <div id="leaf-layer" aria-hidden="true"></div>
-
-          <span class="board-corner board-corner-left" aria-hidden="true">✳</span>
-          <span class="board-corner board-corner-right" aria-hidden="true">✳</span>
+      <!-- Mini game -->
+      <section class="section game-section" id="play">
+        <div class="section-heading">
+          <span class="section-kicker">04 / A LITTLE DISTRACTION</span>
+          <i data-lucide="gamepad-2" class="section-icon icon-outline" aria-hidden="true"></i>
         </div>
 
-        <div class="game-footer">
-          <p id="game-status" class="game-status" aria-live="polite">
-            Your cozy high score awaits.
+        <div class="game-intro">
+          <div>
+            <h2>Catch some <span class="serif-italic">falling leaves.</span></h2>
+            <p>A tiny game, because this website needed one. Click as many leaves as you can before time runs out.</p>
+          </div>
+          <div class="game-stamp" aria-hidden="true">
+            <i data-lucide="leaf" class="icon-outline"></i>
+            <span>JUST FOR FUN</span>
+          </div>
+        </div>
+
+        <div class="game-panel">
+          <div class="game-stats">
+            <div class="game-stat">
+              <span class="stat-label">SCORE</span>
+              <strong id="score">00</strong>
+            </div>
+            <div class="game-stat">
+              <span class="stat-label">TIME LEFT</span>
+              <strong><span id="time">20</span><small>s</small></strong>
+            </div>
+            <div class="game-stat">
+              <span class="stat-label">PERSONAL BEST</span>
+              <strong id="best">00</strong>
+            </div>
+          </div>
+
+          <div class="game-board" id="game-board">
+            <div class="game-welcome" id="game-welcome">
+              <i data-lucide="leaf" class="game-leaf-icon icon-outline" aria-hidden="true"></i>
+              <p>Ready to catch some leaves?</p>
+              <button class="button button-primary" id="start-game" type="button">
+                Let's play
+                <i data-lucide="play" class="icon-outline" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div id="leaf-layer" aria-label="Falling leaves game area"></div>
+          </div>
+
+          <p class="game-status" id="game-status" aria-live="polite">
+            You have 20 seconds. Make them count.
           </p>
-
-          <span class="mono-label">TIP: CLICK / TAP THE LEAVES</span>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- SECRET GARDEN -->
-    <section id="secrets" class="secret-section section-block">
-      <div class="secret-orbit" aria-hidden="true">✳</div>
+      <!-- Secret corner -->
+      <section class="secret-section" id="secret">
+        <div class="secret-inner">
+          <i data-lucide="lock-keyhole" class="secret-icon icon-outline" aria-hidden="true"></i>
+          <div>
+            <span class="section-kicker">PSSST. YOU FOUND THE CORNER.</span>
+            <h2>Curiosity looks good on you.</h2>
+            <p>There's not much here. Or maybe there is.</p>
+          </div>
+          <button class="secret-button" id="secret-button" type="button">
+            Find out
+            <i data-lucide="arrow-up-right" class="icon-outline" aria-hidden="true"></i>
+          </button>
+        </div>
+        <p class="secret-message" id="secret-message" hidden>
+          Hey, you. Thanks for exploring this little corner of the internet.
+          Keep being curious. It tends to lead somewhere interesting.
+        </p>
+      </section>
+    </main>
 
-      <p class="eyebrow">05 / if you made it this far...</p>
+    <!-- Footer -->
+    <footer class="site-footer">
+      <a class="footer-brand" href="#home">veronaz<span>.exe</span></a>
+      <p>Made with curiosity, caffeine, and a suspicious number of browser tabs.</p>
+      <a href="#home" class="back-to-top">
+        BACK TO TOP
+        <i data-lucide="arrow-up" class="icon-outline" aria-hidden="true"></i>
+      </a>
+      <span class="footer-year">© <span id="current-year"></span> VERO</span>
+    </footer>
+  </div>
 
-      <h2>
-        Curiosity looks <span class="serif-italic">good on you.</span>
-      </h2>
+  <!-- Existing interactions -->
+  <script src="game.js"></script>
 
-      <p>
-        Every little experiment starts with a question.
-        Keep asking them. You never know what you'll build next.
-      </p>
+  <!-- Initialize outline icons, including icons inserted by the page -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
 
-      <button id="secret-button" class="button button-outline" type="button">
-        open a tiny surprise <span aria-hidden="true">♡</span>
-      </button>
-
-      <p id="secret-message" class="secret-message" hidden aria-live="polite">
-        Tiny reminder from this corner of the internet:
-        you're allowed to be a work in progress. Keep going. ♡
-      </p>
-
-      <span class="secret-footnote">
-        psst... you found the secret garden
-      </span>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    <a class="footer-brand" href="#home">veronaz<span>✳</span></a>
-
-    <p>made with curiosity, caffeine &amp; a little autumn magic.</p>
-
-    <a
-      href="https://github.com/vero0996"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      back to GitHub ↗
-    </a>
-
-    <span class="footer-end">
-      END OF THIS LITTLE CORNER — FOR NOW
-    </span>
-  </footer>
+      const year = document.getElementById("current-year");
+      if (year) year.textContent = new Date().getFullYear();
+    });
+  </script>
 </body>
 </html>
-
