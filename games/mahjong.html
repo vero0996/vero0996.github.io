@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mahjong Solitaire</title>
+<style>
+:root{--bg:#211711;--panel:#35251b;--ink:#f0e2ce;--muted:#b39a80;--rust:#c16b43;--line:#4c382b}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:var(--bg);color:var(--ink);font:12px "Courier New",monospace}
+main{max-width:780px;margin:auto}
+.kicker{color:var(--rust);letter-spacing:.15em;font-size:11px}
+h1{font:38px Georgia,serif;margin:10px 0}
+p{color:var(--muted);line-height:1.6}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.stat{display:inline-block;background:var(--panel);border:1px solid var(--line);padding:9px;border-radius:8px;margin-left:4px}
+.stat b{color:#a3a786}
+button{cursor:pointer;font:12px "Courier New",monospace;border:1px solid var(--line);border-radius:7px;padding:9px 12px;background:var(--panel);color:var(--ink)}
+.primary{background:var(--rust);border-color:var(--rust);color:white}
+.actions{display:flex;gap:8px;margin:15px 0}
+.table{padding:15px;background:radial-gradient(ellipse,#3a2b1c,#20150f);border:1px solid var(--line);border-radius:12px}
+.tiles{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
+.tile{aspect-ratio:.78;background:#e9ddc4;color:#453224;border:1px solid #b8a88c;border-bottom:4px solid #b9a78a;border-radius:6px;display:grid;place-items:center;font-size:clamp(18px,4vw,29px);box-shadow:0 2px 0 #140d09;padding:0}
+.tile:disabled{opacity:.25;filter:grayscale(1);cursor:not-allowed}
+.tile.selected{outline:3px solid var(--rust);transform:translateY(-3px)}
+.tile.free{background:#f3e9d3}
+.message{min-height:24px;color:#a3a786;margin-top:12px}
+@media(max-width:520px){body{padding:12px}.table{padding:8px}.tiles{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}.tile{font-size:20px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">04 / MATCHING MINDFULNESS</div>
+  <div class="top">
+    <h1>Mahjong Solitaire<span style="color:var(--rust)">.</span></h1>
+    <div>
+      <span class="stat">PAIRS <b id="pairs">0</b>/12</span>
+      <span class="stat">MOVES <b id="moves">0</b></span>
+    </div>
+  </div>
+  <p>Match identical free tiles. This is a compact single-layer version: a tile is free when it has no remaining tile immediately to its left or right.</p>
+  <div class="actions">
+    <button class="primary" id="new">New layout ↻</button>
+    <button id="hint">Show a match</button>
+  </div>
+  <section class="table"><div class="tiles" id="tiles"></div></section>
+  <div class="message" id="message" aria-live="polite">Select two matching free tiles.</div>
+</main>
+<script>
+const symbols=["🀇","🀈","🀉","🀊","🀋","🀌","🀍","🀎","🀏","🀙","🀚","🀛"];
+let tiles=[],selected=[],moves=0,cleared=0;
+const root=document.getElementById("tiles");
+const message=document.getElementById("message");
+
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+  return array;
+}
+function isFree(i){
+  if(!tiles[i]||tiles[i].gone)return false;
+  return i===0||i===tiles.length-1||tiles[i-1].gone||tiles[i+1].gone;
+}
+function start(){
+  tiles=shuffle([...symbols,...symbols]).map((symbol,id)=>({id,symbol,gone:false}));
+  selected=[];moves=0;cleared=0;
+  message.textContent="Select two matching free tiles.";
+  draw();
+}
+function draw(){
+  root.innerHTML="";
+  tiles.forEach((tile,i)=>{
+    const button=document.createElement("button");
+    button.className="tile"+(isFree(i)?" free":"")+(selected.includes(i)?" selected":"");
+    button.textContent=tile.gone?"":tile.symbol;
+    button.disabled=tile.gone||!isFree(i);
+    button.setAttribute("aria-label","Mahjong tile");
+    button.onclick=()=>choose(i);
+    root.appendChild(button);
+  });
+  document.getElementById("pairs").textContent=cleared;
+  document.getElementById("moves").textContent=moves;
+}
+function choose(i){
+  if(selected.includes(i)){selected=selected.filter(n=>n!==i);draw();return;}
+  selected.push(i);
+  if(selected.length===2){
+    moves++;
+    const [a,b]=selected;
+    if(tiles[a].symbol===tiles[b].symbol){
+      tiles[a].gone=true;
+      tiles[b].gone=true;
+      cleared++;
+      message.textContent=cleared===12?"Board cleared — beautifully done!":"A match! Keep going.";
+    }else{
+      message.textContent="Not a match. Try another pair.";
+    }
+    selected=[];
+  }
+  draw();
+}
+document.getElementById("new").onclick=start;
+document.getElementById("hint").onclick=()=>{
+  let match=null;
+  for(let i=0;i<tiles.length&&!match;i++){
+    if(!isFree(i))continue;
+    for(let j=i+1;j<tiles.length;j++){
+      if(isFree(j)&&tiles[i].symbol===tiles[j].symbol){match=[i,j];break;}
+    }
+  }
+  if(match){selected=match;message.textContent="Hint: these two tiles match.";draw();}
+  else message.textContent="No free matching pair. Start a new layout.";
+};
+start();
+</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tetris — veronaz arcade</title>
+<style>
+:root {
+  --bg:#211711; --panel:#35251b; --ink:#f0e2ce;
+  --muted:#b39a80; --rust:#c16b43; --line:#4c382b;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; padding:20px; background:var(--bg); color:var(--ink);
+  font-family:"Courier New",monospace;
+}
+main { max-width:620px; margin:auto; }
+.kicker { color:var(--rust); font-size:11px; letter-spacing:.15em; }
+h1 { font:44px Georgia,serif; margin:9px 0; }
+p { color:var(--muted); font-size:12px; line-height:1.6; }
+.layout { display:grid; grid-template-columns:minmax(0,1fr) 125px; gap:12px; align-items:start; }
+.well { background:#18110d; border:1px solid var(--line); border-radius:10px; padding:7px; display:flex; justify-content:center; }
+canvas { display:block; width:100%; max-width:240px; height:auto; }
+.side { display:grid; gap:8px; }
+.stat { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:9px; }
+.stat span { display:block; font-size:9px; color:var(--muted); }
+.stat b { font-size:20px; }
+button { cursor:pointer; background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:9px; color:var(--ink); font:11px "Courier New",monospace; }
+button.primary { background:var(--rust); border-color:var(--rust); color:white; }
+.controls { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:12px; }
+.controls button { font-size:17px; }
+.status { min-height:30px; }
+@media(max-width:450px) {
+  body { padding:12px; }
+  .layout { grid-template-columns:minmax(0,1fr) 98px; gap:7px; }
+  .stat { padding:7px; }
+  .stat b { font-size:16px; }
+  .side button { font-size:10px; padding:7px 3px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">03 / BLOCK PARTY</div>
+  <h1>Tetris<span style="color:var(--rust)">.</span></h1>
+  <p>Clear lines and keep the stack low. ← → move, ↑ rotate, ↓ soft drop, Space hard drop.</p>
+
+  <div class="layout">
+    <div class="well">
+      <canvas id="game" width="240" height="480" aria-label="Tetris board"></canvas>
+    </div>
+    <aside class="side">
+      <div class="stat"><span>SCORE</span><b id="score">0</b></div>
+      <div class="stat"><span>LINES</span><b id="lines">0</b></div>
+      <div class="stat"><span>LEVEL</span><b id="level">1</b></div>
+      <button class="primary" id="restart">Start / restart</button>
+      <button id="pause">Pause</button>
+      <p id="status" class="status">Press Start to play.</p>
+    </aside>
+  </div>
+
+  <div class="controls">
+    <button data-action="left">←</button>
+    <button data-action="rotate">↻</button>
+    <button data-action="right">→</button>
+    <button data-action="down">↓</button>
+    <button data-action="drop">DROP</button>
+    <button data-action="pause">Ⅱ</button>
+  </div>
+</main>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const COLS = 10, ROWS = 20, CELL = 24;
+const palette = ["#c16b43","#d6b16d","#a3a786","#b96f5b","#8e654e","#d8c7a5","#a85a38"];
+const shapes = [
+  [[1,1,1,1]],
+  [[1,1],[1,1]],
+  [[0,1,0],[1,1,1]],
+  [[1,0,0],[1,1,1]],
+  [[0,0,1],[1,1,1]],
+  [[0,1,1],[1,1,0]],
+  [[1,1,0],[0,1,1]]
+];
+
+let grid, piece, score, lines, level, running=false, paused=false;
+let last=0, elapsed=0, animation=0;
+
+function newPiece() {
+  const shape = shapes[Math.floor(Math.random()*shapes.length)].map(r=>r.slice());
+  return {
+    shape,
+    x: Math.floor((COLS-shape[0].length)/2),
+    y: 0,
+    color: Math.floor(Math.random()*palette.length)
+  };
+}
+
+function start() {
+  cancelAnimationFrame(animation);
+  grid = Array.from({length:ROWS},()=>Array(COLS).fill(-1));
+  score=0; lines=0; level=1; paused=false; running=true;
+  piece=newPiece(); last=0; elapsed=0;
+  document.getElementById("status").textContent="Good luck. Clear those lines!";
+  updateStats();
+  draw();
+  animation=requestAnimationFrame(loop);
+}
+
+function collides(p, dx=0, dy=0, shape=p.shape) {
+  for(let y=0;y<shape.length;y++) for(let x=0;x<shape[y].length;x++) {
+    if(!shape[y][x]) continue;
+    const nx=p.x+x+dx, ny=p.y+y+dy;
+    if(nx<0||nx>=COLS||ny>=ROWS) return true;
+    if(ny>=0 && grid[ny][nx]!==-1) return true;
+  }
+  return false;
+}
+
+function rotate() {
+  const rotated=piece.shape[0].map((_,i)=>piece.shape.map(row=>row[i]).reverse());
+  for(const shift of [0,-1,1,-2,2]) {
+    if(!collides(piece,shift,0,rotated)) {
+      piece.x+=shift; piece.shape=rotated; return;
+    }
+  }
+}
+
+function lockPiece() {
+  piece.shape.forEach((row,y)=>row.forEach((v,x)=>{
+    if(v && piece.y+y>=0) grid[piece.y+y][piece.x+x]=piece.color;
+  }));
+
+  let cleared=0;
+  grid=grid.filter(row=>{
+    if(row.every(v=>v!==-1)){cleared++;return false;}
+    return true;
+  });
+  while(grid.length<ROWS) grid.unshift(Array(COLS).fill(-1));
+
+  if(cleared) {
+    lines+=cleared;
+    score += [0,100,300,500,800][cleared]*level;
+    level=1+Math.floor(lines/10);
+  }
+
+  piece=newPiece();
+  updateStats();
+  if(collides(piece)) {
+    running=false;
+    document.getElementById("status").textContent="Game over — press Start to try again.";
+  }
+}
+
+function action(a) {
+  if(a==="restart"){start();return;}
+  if(a==="pause") {
+    if(!running)return;
+    paused=!paused;
+    document.getElementById("status").textContent=paused?"Paused.":"Back in the game.";
+    if(!paused){last=0;animation=requestAnimationFrame(loop);}
+    return;
+  }
+  if(!running||paused)return;
+  if(a==="left"&&!collides(piece,-1,0))piece.x--;
+  if(a==="right"&&!collides(piece,1,0))piece.x++;
+  if(a==="rotate")rotate();
+  if(a==="down") {
+    if(!collides(piece,0,1)){piece.y++;score++;}
+    else lockPiece();
+  }
+  if(a==="drop") {
+    while(!collides(piece,0,1)){piece.y++;score+=2;}
+    lockPiece();
+  }
+  updateStats();draw();
+}
+
+function updateStats() {
+  document.getElementById("score").textContent=score;
+  document.getElementById("lines").textContent=lines;
+  document.getElementById("level").textContent=level;
+}
+
+function cell(x,y,color) {
+  ctx.fillStyle=color;
+  ctx.fillRect(x*CELL+1,y*CELL+1,CELL-2,CELL-2);
+  ctx.fillStyle="rgba(255,255,255,.12)";
+  ctx.fillRect(x*CELL+3,y*CELL+3,CELL-6,3);
+}
+
+function draw() {
+  ctx.fillStyle="#18110d";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) {
+    if(grid[y][x]!==-1) cell(x,y,palette[grid[y][x]]);
+    else {ctx.strokeStyle="#302219";ctx.strokeRect(x*CELL,y*CELL,CELL,CELL);}
+  }
+  if(piece) piece.shape.forEach((row,y)=>row.forEach((v,x)=>{
+    if(v && piece.y+y>=0) cell(piece.x+x,piece.y+y,palette[piece.color]);
+  }));
+}
+
+function loop(t) {
+  if(!running||paused)return;
+  if(!last)last=t;
+  elapsed+=t-last;last=t;
+  const speed=Math.max(90,700-(level-1)*55);
+  if(elapsed>speed) {
+    if(!collides(piece,0,1))piece.y++;
+    else lockPiece();
+    elapsed=0;draw();
+  }
+  animation=requestAnimationFrame(loop);
+}
+
+document.addEventListener("keydown",e=>{
+  const keys={ArrowLeft:"left",ArrowRight:"right",ArrowUp:"rotate",ArrowDown:"down"," ":"drop"};
+  if(keys[e.key]){e.preventDefault();action(keys[e.key]);}
+});
+document.getElementById("restart").onclick=()=>action("restart");
+document.getElementById("pause").onclick=()=>action("pause");
+document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>action(b.dataset.action));
+
+grid=Array.from({length:ROWS},()=>Array(COLS).fill(-1));
+piece=newPiece();
+draw();
+</script>
+</body>
+</html>

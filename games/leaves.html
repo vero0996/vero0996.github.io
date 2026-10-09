@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Falling Leaves</title>
+<style>
+:root{--bg:#211711;--panel:#35251b;--ink:#f0e2ce;--muted:#b39a80;--rust:#c16b43;--line:#4c382b}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:var(--bg);color:var(--ink);font:13px "Courier New",monospace}
+main{max-width:650px;margin:auto}
+.kicker{color:var(--rust);font-size:11px;letter-spacing:.15em}
+h1{font:40px Georgia,serif;margin:10px 0}
+p{color:var(--muted);line-height:1.6}
+.stats{display:flex;gap:8px;margin:18px 0}
+.stat{flex:1;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+.stat span{display:block;color:var(--muted);font-size:10px;margin-bottom:6px}
+.stat b{font-size:20px}
+.board{height:330px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:linear-gradient(#38251a,#211711)}
+button{cursor:pointer;font:12px "Courier New",monospace}
+.start{padding:11px 15px;background:var(--rust);border:0;border-radius:7px;color:white}
+.center{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;text-align:center}
+.leaf{position:absolute;top:-35px;border:0;background:transparent;padding:0;font-size:28px;cursor:pointer;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(390px) rotate(260deg)}}
+#status{text-align:center;min-height:20px}
+@media(max-width:420px){body{padding:12px}.board{height:300px}.stat{padding:8px}.stat b{font-size:16px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">01 / AUTUMN MODE</div>
+  <h1>Falling Leaves 🍂</h1>
+  <p>Click the falling leaves before they drift away. You have 20 seconds. How many can you catch?</p>
+  <div class="stats">
+    <div class="stat"><span>SCORE</span><b id="score">00</b></div>
+    <div class="stat"><span>TIME LEFT</span><b id="time">20</b></div>
+    <div class="stat"><span>PERSONAL BEST</span><b id="best">00</b></div>
+  </div>
+  <div class="board" id="board">
+    <div class="center" id="welcome">
+      <div style="font-size:40px">🍁</div>
+      <div>Ready to catch some leaves?</div>
+      <button class="start" id="start">Let's play →</button>
+    </div>
+  </div>
+  <p id="status" aria-live="polite">A tiny break. A tiny challenge.</p>
+</main>
+<script>
+const board=document.getElementById("board");
+const scoreEl=document.getElementById("score");
+const timeEl=document.getElementById("time");
+const bestEl=document.getElementById("best");
+const welcome=document.getElementById("welcome");
+const statusEl=document.getElementById("status");
+let score=0,time=20,running=false,spawnTimer,timer;
+let best=Number(localStorage.getItem("veronaz-leaves-best")||0);
+bestEl.textContent=String(best).padStart(2,"0");
+
+function makeLeaf(){
+  if(!running)return;
+  const leaf=document.createElement("button");
+  leaf.className="leaf";
+  leaf.textContent=["🍂","🍁","🍃"][Math.floor(Math.random()*3)];
+  leaf.style.left=(3+Math.random()*88)+"%";
+  leaf.style.animationDuration=(2.5+Math.random()*2)+"s";
+  leaf.setAttribute("aria-label","Catch leaf");
+  leaf.onclick=()=>{
+    if(!running)return;
+    score++;
+    scoreEl.textContent=String(score).padStart(2,"0");
+    leaf.remove();
+  };
+  leaf.addEventListener("animationend",()=>leaf.remove());
+  board.appendChild(leaf);
+}
+
+function endGame(){
+  running=false;
+  clearInterval(spawnTimer);
+  clearInterval(timer);
+  board.querySelectorAll(".leaf").forEach(el=>el.remove());
+  if(score>best){
+    best=score;
+    localStorage.setItem("veronaz-leaves-best",best);
+    bestEl.textContent=String(best).padStart(2,"0");
+  }
+  welcome.hidden=false;
+  welcome.innerHTML=`<div style="font-size:40px">🍂</div><div>${score>=best?"Nice run!":"Time is up!"}</div><button class="start" id="start">Play again →</button>`;
+  document.getElementById("start").onclick=startGame;
+  statusEl.textContent=`You caught ${score} leaves. Take a breath, then try again.`;
+}
+
+function startGame(){
+  clearInterval(spawnTimer);
+  clearInterval(timer);
+  score=0;time=20;running=true;
+  scoreEl.textContent="00";timeEl.textContent="20";
+  welcome.hidden=true;
+  board.querySelectorAll(".leaf").forEach(el=>el.remove());
+  statusEl.textContent="Catch as many as you can!";
+  makeLeaf();
+  spawnTimer=setInterval(makeLeaf,470);
+  timer=setInterval(()=>{
+    time--;
+    timeEl.textContent=time;
+    if(time<=0)endGame();
+  },1000);
+}
+document.getElementById("start").onclick=startGame;
+</script>
+</body>
+</html>
